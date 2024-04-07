@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Blog - Home{% endblock %}
+{% block content %}
+    <h1 class="mt-5">Blog</h1>
+    <div class="row mt-4">
+        <!-- Loop through paginated posts -->
+        {% for post in posts %}
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary">Vote Up</button>
+                            <button class="btn btn-danger">Vote Down</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if posts.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            {% for num in posts.paginator.page_range %}
+                <li class="page-item{% if num == posts.number %} active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+            {% if posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.paginator.num_pages }}">Last</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
